@@ -9,14 +9,18 @@ export type ServerHook = (
 export interface Plugin {
   name: string;
   configureServer?: ServerHook;
+  
   resolveId?: (
     id: string,
     importer?: string
   ) => Promise<PartialResolvedId | null> | PartialResolvedId | null;
+
   load?: (id: string) => Promise<LoadResult | null> | LoadResult | null;
+
   transform?: (
     code: string,
     id: string
   ) => Promise<SourceDescription | null> | SourceDescription | null;
+
   transformIndexHtml?: (raw: string) => Promise<string> | string;
 }
