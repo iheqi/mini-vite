@@ -5,10 +5,33 @@ import connect from "connect";
 import { blue, green } from "picocolors";
 import { optimize } from "../optimizer/index";
 
+import { resolvePlugins } from "../plugins";
+import { createPluginContainer, PluginContainer } from "../pluginContainer";
+
 export async function startDevServer() {
   const app = connect();
   const root = process.cwd();
   const startTime = Date.now();
+
+  // 插件机制
+  const plugins = resolvePlugins();
+  const pluginContainer = createPluginContainer(plugins);
+  
+  const serverContext: ServerContext = {
+    root: process.cwd(),
+    app,
+    pluginContainer,
+    plugins,
+  };
+  
+  // 插件流水线
+  for (const plugin of plugins) {
+    if (plugin.configureServer) {
+      await plugin.configureServer(serverContext);
+    }
+  }
+
+
   app.listen(3000, async () => {
     await optimize(root);
 
@@ -18,4 +41,11 @@ export async function startDevServer() {
     );
     console.log(`> 本地访问路径: ${blue("http://localhost:3000")}`);
   });
+}
+
+export interface ServerContext {
+  root: string;
+  pluginContainer: PluginContainer;
+  app: connect.Server;
+  plugins: Plugin[];
 }
