@@ -8,7 +8,8 @@ import { optimize } from "../optimizer/index";
 
 import { resolvePlugins } from "../plugins";
 import { createPluginContainer, PluginContainer } from "../pluginContainer";
-import { indexHtmlMiddware } from "./middlewares/indexHtml";
+import { indexHtmlMiddleware } from "./middlewares/indexHtml";
+import { transformMiddleware } from "./middlewares/transform";
 
 export async function startDevServer() {
   const app = connect();
@@ -33,12 +34,15 @@ export async function startDevServer() {
     }
   }
 
+  // 下面两个中间件都是请求时执行的
   // 处理入口 HTML 资源
-  app.use(indexHtmlMiddware(serverContext));
+  app.use(indexHtmlMiddleware(serverContext));
+  // JS/TS/JSX/TSX 编译能力
+  app.use(transformMiddleware(serverContext));
 
 
   app.listen(4000, async () => {
-    await optimize(root);
+    await optimize(root); // 服务启动时就开始预编译
 
     console.log(
       green("🚀 No-Bundle 服务已经成功启动!"),

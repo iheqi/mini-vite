@@ -1,7 +1,10 @@
 import { Plugin } from "../plugin";
 
+import { esbuildTransformPlugin } from "./esbuild";
+import { importAnalysisPlugin } from "./importAnalysis";
+import { resolvePlugin } from "./resolve";
+
 // Vite 所有的插件就是在这里被收集
 export function resolvePlugins(): Plugin[] {
-  // 下一部分会逐个补充插件逻辑
-  return [];
+  return [resolvePlugin(), esbuildTransformPlugin(), importAnalysisPlugin()];
 }
