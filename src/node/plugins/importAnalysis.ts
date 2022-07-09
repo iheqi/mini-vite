@@ -35,8 +35,12 @@ export function importAnalysisPlugin(): Plugin {
       await init;
       // 解析 import 语句
       const [imports] = parse(code);
-
       const ms = new MagicString(code);
+
+      const { moduleGraph } = serverContext;
+      const curModule = moduleGraph.getModuleById(id)!;
+      const importedModules = new Set<string>();
+
       // 对每一个 import 语句依次进行分析
       for (const importInfo of imports) {
         // 举例说明: const str = `import React from 'react'`
@@ -66,17 +70,21 @@ export function importAnalysisPlugin(): Plugin {
           );
           ms.overwrite(modStart, modEnd, bundlePath);
           // console.log('bundlePath', bundlePath);
-
+          importedModules.add(bundlePath);
         }
         else if (modSource.startsWith(".") || modSource.startsWith("/")) {
           // 直接调用插件上下文的 resolve 方法，会自动经过路径解析插件的处理
           const resolved = await this.resolve(modSource, id);
           if (resolved) {
             ms.overwrite(modStart, modEnd, resolved.id);
+            // importedModules.add(resolved);
+            importedModules.add(resolved.id);
             // console.log('resolved.id', resolved.id);
           }
         }
       }
+
+      moduleGraph.updateModuleInfo(curModule, importedModules);
 
       return {
         code: ms.toString(),

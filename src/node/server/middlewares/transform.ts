@@ -16,16 +16,26 @@ export async function transformRequest(
 ) {
   const { pluginContainer } = serverContext;
   url = cleanUrl(url);
-  // 简单来说，就是依次调用插件容器的 resolveId、load、transform 方法
 
+  // 1.先检查缓存，看之前是否已经编译过
+  const { moduleGraph }  = serverContext;
+  const mod = await moduleGraph.ensureEntryFromUrl(url);
+
+  if (mod && mod.transformResult) { // 如果url对应的
+    return mod.transformResult;
+  }
+
+  // 简单来说，就是依次调用插件容器的 resolveId、load、transform 方法
   const resolvedResult = await pluginContainer.resolveId(url);
   let transformResult;
 
   if (resolvedResult?.id) {
     let code = await pluginContainer.load(resolvedResult.id);
+
     if (typeof code === "object" && code !== null) {
       code = code.code;
     }
+
     if (code) {
       transformResult = await pluginContainer.transform(
         code as string,
@@ -33,6 +43,10 @@ export async function transformRequest(
       );
     }
   }
+  if (mod) {
+    mod.transformResult = transformResult;
+  }
+
   return transformResult;
 }
 

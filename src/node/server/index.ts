@@ -11,12 +11,14 @@ import { createPluginContainer, PluginContainer } from "../pluginContainer";
 import { indexHtmlMiddleware } from "./middlewares/indexHtml";
 import { transformMiddleware } from "./middlewares/transform";
 import { staticMiddleware } from "./middlewares/static";
+import { ModuleGraph } from "../ModuleGraph";
 
 export async function startDevServer() {
   const app = connect();
   const root = process.cwd();
   const startTime = Date.now();
 
+  const moduleGraph = new ModuleGraph((url) => pluginContainer.resolveId(url));
   // 插件机制
   const plugins = resolvePlugins();
   const pluginContainer = createPluginContainer(plugins);
@@ -26,6 +28,7 @@ export async function startDevServer() {
     app,
     pluginContainer,
     plugins,
+    moduleGraph
   };
   
   // 插件流水线
@@ -58,4 +61,5 @@ export interface ServerContext {
   pluginContainer: PluginContainer;
   app: connect.Server;
   plugins: Plugin[];
+  moduleGraph: ModuleGraph;
 }
