@@ -43,7 +43,7 @@ export class ModuleGraph {
   }
 
 
-  // ensureEntryFromUrl 方法创建新的 ModuleNode 节点
+  // 根据url获取已有的，或创建新的 ModuleNode 
   async ensureEntryFromUrl(rawUrl: string): Promise<ModuleNode> {
 
     const { url, resolvedId } = await this._resolve(rawUrl);
@@ -90,6 +90,7 @@ export class ModuleGraph {
   // HMR 触发时会执行这个方法
   invalidateModule(file: string) {
     const mod = this.idToModuleMap.get(file);
+    
     if (mod) {
       // 更新时间戳
       mod.lastHMRTimestamp = Date.now();

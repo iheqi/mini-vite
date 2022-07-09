@@ -22,3 +22,7 @@ export const cleanUrl = (url: string): string => url.replace(HASH_RE, "").replac
 export function removeImportQuery(url: string): string {
   return url.replace(/\?import$/, "");
 }
+
+export function getShortName(file: string, root: string) {
+  return file.startsWith(root + "/") ? path.posix.relative(root, file) : file;
+}
