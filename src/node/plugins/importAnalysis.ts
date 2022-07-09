@@ -44,6 +44,16 @@ export function importAnalysisPlugin(): Plugin {
         const { s: modStart, e: modEnd, n: modSource } = importInfo;
         if (!modSource) continue;
         // console.log('importInfo', importInfo);
+
+        // 静态资源
+        if (modSource.endsWith(".svg")) {
+          // 加上 ?import 后缀
+          const resolvedUrl = path.join(path.dirname(id), modSource);
+          // console.log('resolvedUrl', resolvedUrl, id, modSource);
+          ms.overwrite(modStart, modEnd, `${resolvedUrl}?import`);
+          continue;
+        }  
+
         // 对于第三方依赖路径(bare import)，需要重写为预构建产物的路径；
         // 对于绝对路径和相对路径，需要借助之前的路径解析插件进行解析。
 

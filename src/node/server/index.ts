@@ -10,6 +10,7 @@ import { resolvePlugins } from "../plugins";
 import { createPluginContainer, PluginContainer } from "../pluginContainer";
 import { indexHtmlMiddleware } from "./middlewares/indexHtml";
 import { transformMiddleware } from "./middlewares/transform";
+import { staticMiddleware } from "./middlewares/static";
 
 export async function startDevServer() {
   const app = connect();
@@ -39,7 +40,7 @@ export async function startDevServer() {
   app.use(indexHtmlMiddleware(serverContext));
   // JS/TS/JSX/TSX 编译能力
   app.use(transformMiddleware(serverContext));
-
+  app.use(staticMiddleware());
 
   app.listen(4000, async () => {
     await optimize(root); // 服务启动时就开始预编译
