@@ -12,5 +12,7 @@ export const isJSRequest = (id: string): boolean => {
   return false;
 };
 
+export const isCSSRequest = (id: string): boolean => cleanUrl(id).endsWith(".css");
+
 export const cleanUrl = (url: string): string => url.replace(HASH_RE, "").replace(QUERY_RE, "");
   

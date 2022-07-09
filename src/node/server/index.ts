@@ -48,7 +48,7 @@ export async function startDevServer() {
       green("🚀 No-Bundle 服务已经成功启动!"),
       `耗时: ${Date.now() - startTime}ms`
     );
-    console.log(`> 本地访问路径: ${blue("http://localhost:3000")}`);
+    console.log(`> 本地访问路径: ${blue("http://localhost:4000")}`);
   });
 }
 
