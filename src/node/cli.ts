@@ -9,7 +9,6 @@ cli
   .alias("serve")
   .alias("dev")
   .action(async () => {
-    // console.log('测试 cli~');
     await startDevServer();
   });
 

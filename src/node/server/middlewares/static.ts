@@ -12,7 +12,7 @@ export function staticMiddleware(): NextHandleFunction {
       return;
     }
     // 不处理 import 请求
-    console.log('req.url', req.url, isImportRequest(req.url));
+    // console.log('req.url', req.url, isImportRequest(req.url));
     if (isImportRequest(req.url)) {
       return;
     }

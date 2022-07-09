@@ -73,7 +73,6 @@ export class ModuleGraph {
           ? await this.ensureEntryFromUrl(cleanUrl(curImports))
           : curImports;
       
-          console.log('curImports, dep', curImports, dep);
       if (dep) {
         mod.importedModules.add(dep);
         dep.importers.add(mod);
