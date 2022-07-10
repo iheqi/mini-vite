@@ -1,0 +1,23 @@
+{
+  "name": "my-bundler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsup ./src/rollup.ts --format cjs,esm --dts --clean --watch",
+    "build": "tsup ./src/rollup.ts --format cjs,esm --dts --clean --minify"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^18.0.3",
+    "tsup": "^6.1.3",
+    "typescript": "^4.7.4",
+    "typescript-transform-paths": "^3.3.1"
+  },
+  "dependencies": {
+    "magic-string": "^0.26.2"
+  }
+}
